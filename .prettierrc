@@ -1,0 +1,18 @@
+{
+  "endOfLine": "auto",
+  "singleQuote": true,
+  "printWidth": 100,
+  "semi": true,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "jsxBracketSameLine": false,
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": "*.gast",
+      "options": {
+        "parser": "html"
+      }
+    }
+  ]
+}
