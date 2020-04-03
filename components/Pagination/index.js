@@ -30,7 +30,7 @@ PaginationController.propTypes = {
   totalItems: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
   currentPage: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired
+  onChangePage: PropTypes.func.isRequired,
 };
 
 export default PaginationController;

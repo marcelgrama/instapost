@@ -17,7 +17,7 @@
     ]
   },
   "scripts": {
-    "dev": "nodemon --no-update-notifier ./index.js",
+    "start:dev": "nodemon --no-update-notifier ./index.js",
     "build": "next build",
     "start": "next start",
     "lint": "eslint --fix --ext .js pages"

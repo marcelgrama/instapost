@@ -4,5 +4,5 @@ const apiEndpoint = 'api/';
 export default {
   baseURL,
   apiEndpoint,
-  apiBaseURL: `${baseURL}${apiEndpoint}`
+  apiBaseURL: `${baseURL}${apiEndpoint}`,
 };
