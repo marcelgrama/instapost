@@ -15,7 +15,7 @@ export const GridSvgIcon = styled(Grid)`
 
 export const StyledGridItemList = styled(Grid)`
   && {
-    margin-left: ${props => (props.viewport === 'mobile' ? '40px' : '10px')};
+    margin-left: ${(props) => (props.viewport === 'mobile' ? '40px' : '10px')};
   }
 `;
 
@@ -40,7 +40,7 @@ export const StyledDivNavigationBar = styled.div`
     top: 0;
     left: 0;
     z-index: 2000;
-    width: ${props => (props.viewport === 'mobile' ? '100%' : '300px')};
+    width: ${(props) => (props.viewport === 'mobile' ? '100%' : '300px')};
   }
 `;
 
@@ -58,14 +58,14 @@ export const MainContainer = styled.div`
   && {
     padding: 16px;
     margin-top: 64px;
-    margin-left: ${props => (props.childport ? '300px' : '0px')};
+    margin-left: ${(props) => (props.childport ? '300px' : '0px')};
   }
 `;
 
 export const ListItemHeader = styled(ListItem)`
   p {
     color: ${theme.palette.common.white};
-    margin-left: ${props => (props.viewport === 'mobile' ? '30px' : '5px')};
+    margin-left: ${(props) => (props.viewport === 'mobile' ? '30px' : '5px')};
   }
   && {
     border-bottom: 2px solid ${theme.palette.common.white};

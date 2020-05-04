@@ -11,11 +11,12 @@ import { authUser } from '../../api/endpoints';
 class AuthLayer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasPermission: false };
+    // TODO permisions
+    this.state = { hasPermission: true };
   }
 
-  componentWillMount() {
-    this.checkPermission().then(hasPermission => {
+  componentDidMount() {
+    this.checkPermission().then((hasPermission) => {
       if (hasPermission) {
         return this.setState({ hasPermission: true });
       }
@@ -23,17 +24,19 @@ class AuthLayer extends React.Component {
     });
   }
 
-  checkPermission = () =>
-    new Promise(resolve => {
-      if (this.props.authRequired) {
-        if (this.props.isUserAuth) {
+  checkPermission = () => {
+    const { authRequired, isUserAuth, dispatch } = this.props;
+
+    const checkPermision = new Promise((resolve) => {
+      if (authRequired) {
+        if (isUserAuth) {
           return resolve(true);
         }
         const token = getAuthToken();
         if (token) {
-          return fetch.get(authUser).then(response => {
+          return fetch.get(authUser).then((response) => {
             const userData = response.data;
-            this.props.dispatch(signIn(userData));
+            dispatch(signIn(userData));
             return resolve(true);
           });
         }
@@ -41,9 +44,13 @@ class AuthLayer extends React.Component {
       }
       return resolve(true);
     });
+    return checkPermision;
+  };
 
   render() {
-    return this.state.hasPermission ? this.props.children : <Loader />;
+    const { hasPermission } = this.state;
+    const { children } = this.props;
+    return hasPermission ? children : <Loader />;
   }
 }
 
@@ -51,11 +58,11 @@ AuthLayer.propTypes = {
   children: PropTypes.node.isRequired,
   isUserAuth: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired,
-  authRequired: PropTypes.bool.isRequired
+  authRequired: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => ({
-  isUserAuth: state.User.isAuth
+const mapStateToProps = (state) => ({
+  isUserAuth: state.User.isAuth,
 });
 
 export default connect(mapStateToProps)(AuthLayer);

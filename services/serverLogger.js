@@ -7,11 +7,20 @@ const myLevels = {
   error: 0,
   warn: 1,
   info: 2,
-  debug: 3
+  debug: 3,
 };
 
-winston.remove(winston.transports.Console);
-winston.add(winston.transports.Console, { colorize: true });
-winston.setLevels(myLevels);
+winston.remove(
+  new winston.transports.Console({
+    format: winston.format.simple(),
+  }),
+);
+
+winston.add(
+  new winston.transports.Console({
+    format: winston.format.simple(),
+  }),
+  { colorize: true },
+);
 
 export default winston;

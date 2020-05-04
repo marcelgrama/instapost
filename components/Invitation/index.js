@@ -6,16 +6,15 @@ import Router from 'next/router';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Title from '../../components/Email/Title';
+import Title from '../Email/Title';
 import fetch from '../../services/fetch';
-import { invitationAccept, circleInvitation, activityInvitationAccept } from '../../api/endpoints';
-import { setCircleInvitation } from '../../actions/circleinvitation';
 import { setSuccess } from '../../actions/success';
 
 class AcceptInvitation extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.getCircleInvitation();
   }
+
   getCircleInvitation = () => {
     fetch.get(circleInvitation, { params: { id: this.props.id } }).then((response) => {
       const circleInvitationData = response.data;
