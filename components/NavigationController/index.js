@@ -3,17 +3,21 @@ import PropTypes from 'prop-types';
 import Hidden from '@material-ui/core/Hidden';
 import AppBar from '../AppBar';
 import Navigationbar from '../NavigationBar';
-import { ListItems } from '../../components/NavigationBar/Items';
+import { ListItems } from '../NavigationBar/Items';
 import { isUp } from '../../services/responsive';
 
 class NavigationController extends React.PureComponent {
-  state = {
-    showStatus: isUp('md')
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      showStatus: isUp('md'),
+    };
+  }
 
   handleChange = () => {
-    this.setState({ showStatus: !this.state.showStatus });
+    this.setState((previousState) => ({ showStatus: !previousState }));
   };
+
   render() {
     if (!this.props.showNav) {
       return this.props.children;
@@ -60,11 +64,11 @@ class NavigationController extends React.PureComponent {
 NavigationController.propTypes = {
   children: PropTypes.node.isRequired,
   showNav: PropTypes.bool,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 };
 
 NavigationController.defaultProps = {
-  showNav: false
+  showNav: false,
 };
 
 export default NavigationController;

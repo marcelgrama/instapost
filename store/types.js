@@ -1,11 +1,11 @@
-import constantCase from 'constant-case';
+import { constantCase } from 'constant-case';
 
 export const getRequestTypes = (method, endpoint) => {
   const constantEndpoint = constantCase(endpoint);
   return {
     REQUEST: `${method}_${constantEndpoint}_REQUEST`,
     SUCCESS: `${method}_${constantEndpoint}_SUCCESS`,
-    FAILURE: `${method}_${constantEndpoint}_FAILURE`
+    FAILURE: `${method}_${constantEndpoint}_FAILURE`,
   };
 };
 

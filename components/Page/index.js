@@ -4,8 +4,8 @@ import Router, { withRouter } from 'next/router';
 import React from 'react';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AuthLayer from '../AuthLayer/';
-import Loader from '../Loader/';
+import AuthLayer from '../AuthLayer';
+import Loader from '../Loader';
 import NavigationController from '../NavigationController';
 import theme from './theme';
 import JssLoader from './JssLoader';
@@ -19,12 +19,14 @@ const Page = class extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     Router.onRouteChangeStart = () => this.onRouteChangeStart();
     Router.onRouteChangeComplete = () => this.onRouteChangeEnd();
     Router.onRouteChangeError = () => this.onRouteChangeEnd();
   }
+
   onRouteChangeStart = () => this.setState({ loading: true });
+
   onRouteChangeEnd = () => this.setState({ loading: false });
 
   render() {
@@ -40,7 +42,7 @@ const Page = class extends React.Component {
               <title>RoSkins</title>
             </Head>
             <CssBaseline />
-            <NavigationController showNav={authRequired} title={this.props.title}>
+            <NavigationController showNav title={this.props.title}>
               {children}
             </NavigationController>
           </MuiThemeProvider>

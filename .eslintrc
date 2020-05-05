@@ -10,7 +10,7 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": ["", ".json", ".js", ".jsx"],
+        "extensions": ["", ".json", ".js"],
         "moduleDirectory": ["src", "node_modules"]
       }
     }
@@ -26,17 +26,10 @@
     "object-curly-newline": ["error", { "multiline": true, "consistent": true }],
     "import/no-extraneous-dependencies": "off",
     "import/extensions": "off",
-    "jsx-a11y/click-events-have-key-events": "off",
-    "jsx-a11y/interactive-supports-focus": "off",
-    "jsx-a11y/anchor-is-valid": [
-      "error",
-      {
-        "components": ["Link"],
-        "specialLink": ["to", "hrefLeft", "hrefRight"],
-        "aspects": ["noHref", "invalidHref", "preferButton"]
-      }
-    ],
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-props-no-spreading": "off",
+    "react/destructuring-assignment": ["off", "always", { "ignoreClassFields": "off" }]
   },
   "globals": {
     "Class": false

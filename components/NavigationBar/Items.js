@@ -6,7 +6,7 @@ export const ListItems = [
   {
     name: 'Home',
     icon: HomeIcon,
-    route: '/',
+    route: '/dashboard',
   },
   {
     name: 'Cases',

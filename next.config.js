@@ -1,12 +1,12 @@
 export default {
-  webpack: config => ({
+  webpack: (config) => ({
     target: 'node',
     node: {
       console: true,
       fs: 'empty',
       net: 'empty',
-      tls: 'empty'
+      tls: 'empty',
     },
-    ...config
-  })
+    ...config,
+  }),
 };
