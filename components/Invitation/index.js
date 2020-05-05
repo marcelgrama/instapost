@@ -89,6 +89,7 @@ AcceptInvitation.propTypes = {
   id: PropTypes.string.isRequired,
   onCreatePermision: PropTypes.func.isRequired,
   InvitationCircle: PropTypes.array.isRequired,
+  newProp: PropTypes.string,
 };
 
 export default connect(mapStateToProps)(AcceptInvitation);
