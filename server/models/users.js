@@ -5,35 +5,22 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    name: {
-      first: String,
-      last: String
-    },
-    photo: String,
-    employeePosition: String,
-    department: String,
-    skypeAddress: String,
-    telephone: String,
-    locationId: Number,
-    locationName: String,
-    subsidiaryName: String,
-    subsidiaryId: Number,
-    employeeID: Number,
-    email: String,
-    departmentID: Number
+    data_access_expiration_time: Number,
+    expiresIn: Number,
+    graphDomain: String,
+    signedRequest: String,
+    userID: String,
   },
-  { emitIndexErrors: true }
+  { emitIndexErrors: true },
 );
 
 userSchema.index({ employeeID: 1 });
 
-userSchema.statics.upsertByEmployeeID = function upsertByEmployeeID(
-  employeeID,
-  payload
-) {
-  return this.findOneAndUpdate({ employeeID }, payload, {
+userSchema.statics.upsertByEmployeeID = function upsertByEmployeeID(userID, payload) {
+  return this.findOneAndUpdate({ userID }, payload, {
     upsert: true,
-    new: true
+    new: true,
+    useFindAndModify: false,
   })
     .lean()
     .exec();
