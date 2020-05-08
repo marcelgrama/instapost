@@ -5,78 +5,101 @@ import Router from 'next/router';
 import { connect } from 'react-redux';
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Grow from '@material-ui/core/Grow';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Logo from '../Logo/';
+import Logo from '../Logo';
 import fetch from '../../services/fetch';
 import { setAuthToken } from '../../services/sessionStore';
 import ErrorMsg from '../ErrorMsg';
 import { signIn } from '../../actions/user';
-import { signInSchema } from '../../services/validation';
-import {
-  OutterGrid,
-  InnerGrid,
-  ProgressWrapper,
-  StyledPaper,
-  StyledLink
-} from './style';
+import { OutterGrid, InnerGrid, ProgressWrapper, StyledPaper, StyledLink } from './style';
 import { authSignin } from '../../api/endpoints';
-import { authUser } from '../../api/endpoints';
 
-const SignIn = class extends React.Component {
+const SignIn = class extends React.PureComponent {
   constructor(props) {
     super(props);
     this.formData = {};
     this.state = {
-      error: ''
+      error: '',
     };
   }
-  onInputChange = e => {
-    const { value, name } = e.target;
-    this.formData[name] = value;
-  };
 
-  onKeyPress = e => {
-    if (e.key === 'Enter') {
-      this.signIn();
-    }
-  };
+  componentDidMount() {
+    this.loadFbLoginApi();
+  }
 
-  signIn = () => {
-    const validationResult = signInSchema.validate(this.formData);
-    if (validationResult.error) {
-      this.setState({ error: validationResult.error.details[0].message });
+  signIn = ({ status, authResponse }) => {
+    if (status !== 'connected') {
+      this.setState({ error: status });
     } else {
-      fetch.post(authSignin, this.formData).then(response => {
-        const { error, authToken, ...userData } = response.data;
-        if (authToken) {
-          setAuthToken(authToken);
-          fetch
-            .get(authUser)
-            .then(responseUser => {
-              userData.role = responseUser.data.role;
-              this.props.dispatch(signIn(userData));
-              if (this.props.redirectUrl) {
-                Router.push(decodeURI(this.props.redirectUrl));
-              } else {
-                Router.push('/');
-              }
-            })
-            .catch(err => {
-              this.setState({ err });
-            });
-          if (error) {
-            this.setState({ error });
+      fetch
+        .post(authSignin, authResponse)
+        .then(() => {
+          const { accessToken } = authResponse;
+          if (accessToken) {
+            setAuthToken(accessToken);
+
+            if (this.props.redirectUrl) {
+              Router.push(decodeURI(this.props.redirectUrl));
+            } else {
+              Router.push('/dashboard');
+            }
           }
-        }
-      });
+        })
+        .catch((error) => {
+          this.setState({ error });
+        });
     }
   };
+
+  handleFBLogin = () => {
+    // eslint-disable-next-line no-undef
+    FB.login((response) => {
+      const getUserDetails = (res) => {
+        this.props.dispatch(signIn(res));
+      };
+      if (response.status === 'connected') {
+        // eslint-disable-next-line no-undef
+        FB.api('/me', function (res) {
+          getUserDetails(res);
+        });
+      } else if (response.status === 'not_authorized') {
+        this.setState({ error: 'Please log into this app.' });
+      } else {
+        this.setState({ error: 'Please log into this facebook.' });
+      }
+
+      this.signIn(response);
+    });
+  };
+
+  loadFbLoginApi() {
+    // eslint-disable-next-line func-names
+    window.fbAsyncInit = function () {
+      // eslint-disable-next-line no-undef
+      FB.init({
+        appId: 233167624769391,
+        cookie: true, // enable cookies to allow the server to access the session
+        xfbml: true, // parse social plugins on this page
+        version: 'v2.5', // use version 2.1
+      });
+    };
+
+    // Load the SDK asynchronously
+    // eslint-disable-next-line func-names
+    (function (d, s, id) {
+      let js;
+      const fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=YOUR-APP'S-ID";
+      fjs.parentNode.insertBefore(js, fjs);
+    })(document, 'script', 'facebook-jssdk');
+  }
 
   render() {
     const { loading } = this.props;
-
     return (
       <OutterGrid
         container
@@ -97,34 +120,8 @@ const SignIn = class extends React.Component {
               </Link>
             </Grid>
             <Grid item>
-              <TextField
-                autoFocus
-                name="username"
-                label="Username"
-                onChange={this.onInputChange}
-                onKeyPress={this.onKeyPress}
-                fullWidth
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                label="Password"
-                type="password"
-                name="password"
-                onChange={this.onInputChange}
-                onKeyPress={this.onKeyPress}
-                autoComplete="current-password"
-                fullWidth
-              />
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                onClick={this.signIn}
-                color="primary"
-                fullWidth
-              >
-                Sign In
+              <Button variant="contained" color="primary" fullWidth onClick={this.handleFBLogin}>
+                Sign in with Facebook
               </Button>
             </Grid>
             {this.state.error ? (
@@ -144,14 +141,14 @@ const SignIn = class extends React.Component {
 SignIn.propTypes = {
   dispatch: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  redirectUrl: PropTypes.string
+  redirectUrl: PropTypes.string,
 };
 SignIn.defaultProps = {
-  redirectUrl: ''
+  redirectUrl: '',
 };
 
-const mapStateToProps = state => ({
-  loading: state.Loading[authSignin]
+const mapStateToProps = (state) => ({
+  loading: state.Loading[authSignin],
 });
 
 export default connect(mapStateToProps)(SignIn);
