@@ -23,7 +23,7 @@ class SendEmail extends React.Component {
     this.key = [this.genId()];
     this.initialState = {
       error: '',
-      email: ['']
+      email: [''],
     };
     this.state = this.initialState;
   }
@@ -33,23 +33,24 @@ class SendEmail extends React.Component {
     newEmail.push('');
     this.key.push(this.genId());
     this.setState({
-      email: newEmail
+      email: newEmail,
     });
   };
-  onDeleteEmail = index => () => {
+
+  onDeleteEmail = (index) => () => {
     const newEmail = this.state.email.slice();
     newEmail.splice(index, 1);
     this.key.splice(index, 1);
     this.setState({
-      email: newEmail
+      email: newEmail,
     });
   };
 
-  onEmailChange = index => event => {
+  onEmailChange = (index) => (event) => {
     const newEmail = this.state.email.slice();
     newEmail[index] = event.target.value;
     this.setState({
-      email: newEmail
+      email: newEmail,
     });
   };
 
@@ -61,33 +62,27 @@ class SendEmail extends React.Component {
       this.setState({ error: validationResult.error.details[0].message });
     } else {
       this.setState({ error: '' });
-      fetch
-        .post(invitation, emailData, { params: { id: this.props.id } })
-        .then(response => {
-          if (response.data.code === alreadyInvitedCode) {
-            this.props.dispatch(
-              setSuccess(`Already invited: ${response.data.email}`)
-            );
+      fetch.post(invitation, emailData, { params: { id: this.props.id } }).then((response) => {
+        if (response.data.code === alreadyInvitedCode) {
+          this.props.dispatch(setSuccess(`Already invited: ${response.data.email}`));
+        } else {
+          const activityData = {
+            email: response.data.email,
+            circleId: this.props.id,
+          };
+          fetch.post(activityInvitation, activityData);
+          const { error } = response.data;
+          if (error) {
+            this.setState({ error });
           } else {
-            const activityData = {
-              email: response.data.email,
-              circleId: this.props.id
-            };
-            fetch.post(activityInvitation, activityData);
-            const { error } = response.data;
-            if (error) {
-              this.setState({ error });
-            } else {
-              this.props.dispatch(
-                setSuccess(`Invitation sent!: ${response.data.email} `)
-              );
-              Router.push({
-                pathname: '/polls',
-                query: { id: this.props.id }
-              });
-            }
+            this.props.dispatch(setSuccess(`Invitation sent!: ${response.data.email} `));
+            Router.push({
+              pathname: '/polls',
+              query: { id: this.props.id },
+            });
           }
-        });
+        }
+      });
     }
   };
 
@@ -120,17 +115,8 @@ class SendEmail extends React.Component {
           <Grid container direction="row" spacing={16}>
             <Grid item>
               <Tooltip id="tooltip-fab" title="Add Email">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.onAddEmail}
-                >
-                  <Grid
-                    container
-                    direction="row"
-                    alignItems="center"
-                    spacing={8}
-                  >
+                <Button variant="contained" color="primary" onClick={this.onAddEmail}>
+                  <Grid container direction="row" alignItems="center" spacing={8}>
                     <Grid item>
                       <StyledAddButton />
                     </Grid>
@@ -140,12 +126,7 @@ class SendEmail extends React.Component {
               </Tooltip>
             </Grid>
             <Grid item>
-              <Button
-                variant="contained"
-                value="Submit"
-                color="primary"
-                onClick={this.submitEmail}
-              >
+              <Button variant="contained" value="Submit" color="primary" onClick={this.submitEmail}>
                 <Grid container direction="row" alignItems="center" spacing={8}>
                   <Grid item>
                     <StyledSendButton />
@@ -170,7 +151,7 @@ class SendEmail extends React.Component {
 
 SendEmail.propTypes = {
   id: PropTypes.string.isRequired,
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default connect()(SendEmail);
