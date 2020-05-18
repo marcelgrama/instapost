@@ -1,5 +1,11 @@
 import Joi from 'joi';
 
+export const addApointmentSchema = Joi.object().keys({
+  title: Joi.string().label('Instagram post title').min(3).max(30).required(),
+  startTime: Joi.date().label('Appointment time').required(),
+  story: Joi.boolean(),
+  post: Joi.boolean(),
+});
 export const eventPollCreationSchema = Joi.object().keys({
   title: Joi.string().label('Title').min(3).max(30).required(),
   desc: Joi.string().required().label('Description').min(3).max(200),
