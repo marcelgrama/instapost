@@ -4,6 +4,7 @@ mongoose.Promise = require('bluebird');
 const { Schema } = mongoose;
 
 const AppointmentSchema = new Schema({
+  userId: Schema.Types.String,
   title: Schema.Types.String,
   startTime: Schema.Types.Date,
   story: Schema.Types.Boolean,
