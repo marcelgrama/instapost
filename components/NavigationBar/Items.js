@@ -18,4 +18,9 @@ export const ListItems = [
     icon: MarketIcon,
     route: '/',
   },
+  {
+    name: 'Add Apointment',
+    icon: MarketIcon,
+    route: '/addApointment',
+  },
 ];

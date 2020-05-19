@@ -53,14 +53,16 @@ class AddApointment extends React.Component {
       return this.setState({ error: 'Choose appointment type (story / post)' });
     }
     this.setState({ error: '' });
-    return fetch.post(addAppointmentEndpoint, dataToValidate).then((response) => {
-      const { error } = response.data;
-      if (error) {
-        return this.props.dispatch(setGeneralError('Operation failed!'));
-      }
-      this.props.dispatch(setSuccess('Appointment added!'));
-      return this.props.dispatch(addApointmentAction(response.data));
-    });
+    return fetch
+      .post(addAppointmentEndpoint, dataToValidate, { params: { id: this.props.userId } })
+      .then((response) => {
+        const { error } = response.data;
+        if (error) {
+          return this.props.dispatch(setGeneralError('Operation failed!'));
+        }
+        this.props.dispatch(setSuccess('Appointment added!'));
+        return this.props.dispatch(addApointmentAction(response.data));
+      });
   };
 
   render() {
@@ -145,6 +147,9 @@ class AddApointment extends React.Component {
 
 AddApointment.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  userId: PropTypes.string.isRequired,
 };
-
-export default connect()(AddApointment);
+const mapStateToProps = (state) => ({
+  userId: state.User.id,
+});
+export default connect(mapStateToProps)(AddApointment);
